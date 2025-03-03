@@ -1,3 +1,4 @@
+const { BabyChangingStation } = require("@mui/icons-material");
 
 // Get the canvas element as a const
 const canvas = document.getElementById("renderCanvas");
@@ -82,19 +83,29 @@ const createScene = async function () {
     const marker = BABYLON.MeshBuilder.CreateTorus("marker", { diameter: 0.15, thickness: 0.05 }, scene);
     marker.isVisible = false;
     marker.rotationQuaternion = new BABYLON.Quaternion();
+    const triangleMarker = BABYLON.MeshBuilder.CreateTorus("triangleMarker", { diameter: 0.15, thickness: 0.05 }, scene);
+    triangleMarker.isVisible = false;
+    triangleMarker.rotationQuaternion = new BABYLON.Quaternion();
+
     // STEP 6b: Create a variable to store the latest hit-test results
     let latestHitTestResults = null;
+    let latestTriangleHitTestResults = null;
     // STEP 6c: Add an event listener for the hit-test results
     hitTest.onHitTestResultObservable.add((results) => {
         // STEP 6d: If there is a hit-test result, turn on the marker, and extract the position, rotation, and scaling from the hit-test result
         if (results.length) {
             marker.isVisible = true;
+            triangleMarker.isVisible = true;
             results[0].transformationMatrix.decompose(marker.scaling, marker.rotationQuaternion, marker.position);
             latestHitTestResults = results;
+            results[0].transformationMatrix.decompose(triangleMarker.scaling, triangleMarker.rotationQuaternion, triangleMarker.position);
+            latestTriangleHitTestResults = results;
         } else {
             // STEP 6e: If there is no hit-test result, turn off the marker and clear the stored results
             marker.isVisible = false;
             latestHitTestResults = null;
+            triangleMarkermarker.isVisible = false;
+            latestTriangleHitTestResults = null;
         };
     });
 
@@ -112,8 +123,16 @@ const createScene = async function () {
             }).catch((error) => {
                 console.log(error);
             });
+
+            anchors.addAnchorPointUsingHitTestResultAsync(latestTriangleHitTestResults[0]).then((anchor) => {
+                // STEP 8b: Attach the box to the anchor
+                triangleAnchor.attachedNode = triangle;
+            }).catch((error) => {
+                console.log(error);
+            });
         };
     });
+
 
     // Return the scene
     return scene;
