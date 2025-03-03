@@ -98,7 +98,7 @@ const createScene = async function () {
     canvas.addEventListener("click", () => {
         if (latestHitTestResult && latestHitTestResult.length > 0) {
             // STEP 8b: Attach box to anchor
-            anchors.addAnchorPointUsingHitTestResultsAsync(latestHitTestResult[0])
+            anchors.addAnchorPointUsingHitTestResultAsync(latestHitTestResult[0])
                 .then((anchor) => {
                     anchor.attachedNode = box;
                 }).catch((error) => {
