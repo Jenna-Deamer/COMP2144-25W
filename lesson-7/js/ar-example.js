@@ -1,4 +1,3 @@
-
 // Get the canvas element as a const
 const canvas = document.getElementById("renderCanvas");
 // Create the BABYON 3D engine, and attach it to the canvas
@@ -94,13 +93,19 @@ const createScene = async function () {
     /* ANCHORS
     ---------------------------------------------------------------------------------------------------- */
     // STEP 7: Anchors are a feature that allow you to place objects in the real world space and have them stay there, even if the observer moves around. To enable anchors, use the enableFeature() method of the featuresManager from the base WebXR experience helper (https://immersive-web.github.io/anchors/).
-
+    const anchors = XR.baseExperience.featuresManager.enableFeature(BABYLON.WebXRAnchorSystem, "latest");
     // STEP 8a: Add event listener for click (and simulate this in the Immersive Web Emulator)
-
-    // STEP 8b: Attach box to anchor
-
-
-
+    canvas.addEventListener("click", () => {
+        if (latestHitTestResult && latestHitTestResult.length > 0) {
+            // STEP 8b: Attach box to anchor
+            anchors.addAnchorPointUsingHitTestResultsAsync(latestHitTestResult[0])
+                .then((anchor) => {
+                    anchor.attachedNode = box;
+                }).catch((error) => {
+                    console.log(error)
+                });
+        };
+    });
     // Return the scene
     return scene;
 };
