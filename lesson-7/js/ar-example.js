@@ -109,7 +109,6 @@ const createScene = async function () {
             anchors.addAnchorPointUsingHitTestResultAsync(latestHitTestResults[0]).then((anchor) => {
                 // STEP 8b: Attach the box to the anchor
                 anchor.attachedNode = box;
-                anchor.attachedNode = triangle;
             }).catch((error) => {
                 console.log(error);
             });
